@@ -1,0 +1,19 @@
+{
+  "name": "meron-singalong",
+  "version": "1.0.0",
+  "description": "An Electron app for managing and presenting songs for a sing-along event",
+  "main": "src/script/main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Eyal Shahar",
+  "license": "MIT",
+  "dependencies": {
+    "electron": "^25.1.0"
+  },
+  "devDependencies": {
+    "electron-reloader": "^1.2.3"
+  },
+  "private": true
+}

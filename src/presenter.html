@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <script src="script/search.js"></script>
+  <script src="script/queue.js"></script>
+  <script src="script/playlist.js"></script>
+</head>
+<body>
+  <section id="library">
+    <h2>Library</h2>
+    <input type="text" id="search" placeholder="Search..." oninput="filterSongs()" />
+    <section id="songList"></section>
+  </section>
+  <section id="queue">
+    <h2>Queue</h2>
+    <section id="queueList"></section>
+    <button onclick="savePlaylist('myPlaylist', getQueue())">Save playlist</button>
+    <button onclick="loadPlaylist('myPlaylist')">Load playlist</button>
+  </section>
+  <section id="preview">
+    <iframe id="songView"></iframe>
+    <section id="toolbar">
+      <button onclick="nextSong()">Next song</button>
+    </section>
+  </section>
+
+</body>
+<script>
+  // Load all songs when the page loads
+  window.onload = loadSongs;
+</script>
+
+<style>
+  body{
+    margin: 0;
+    padding: 0;
+    background-color: #000;
+    color: #fff;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    height:100vh;
+    font-family: sans-serif;
+  }
+  h2{
+    margin: 0;
+    padding: 0 0 10px 0;
+    font-size:16px;
+  }
+  #queue, #library, #preview{
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+  }
+  #queueList, #songList, #songView{
+    flex-grow: 1;
+    overflow-y: scroll;
+  }
+  #preview{
+    flex-grow: 1;
+  }
+  #songview{
+    border: none;
+    /* height: 100vh; */
+  }
+</style>
+</html>
