@@ -1,10 +1,14 @@
 const { app, BrowserWindow, ipcMain, screen } = require("electron");
-// const path = require("path");
+const { dialog } = require("electron");
+const path = require("path");
+
 
 // Enable live reload for all the files inside your project directory
 try {
-  require("electron-reloader")(module);
-} catch (_) {}
+require("electron-reload")(path.join(__dirname, "src"), {
+  electron: require.resolve("electron"),
+  hardResetMethod: "exit",
+});} catch (_) {}
 
 let mainWindow, audienceWindow, screenSize;
 
@@ -12,7 +16,7 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     x: 0,
     y: 0,
-    width: screenSize.width / 2,
+    width: screenSize.width  - 200,
     height: screenSize.height,
     webPreferences: {
       nodeIntegration: true,
@@ -21,15 +25,15 @@ function createWindow() {
   });
 
   mainWindow.loadFile("src/_control.html");
-  // mainWindow.webContents.openDevTools();
+  mainWindow.webContents.openDevTools();
 
 
 
   audienceWindow = new BrowserWindow({
-    x: screenSize.width / 2,
-    y: 200,
-    width: screenSize.width / 2,
-    height: screenSize.height,
+    x: screenSize.width - 200,
+    y: 0,
+    width: 200,
+    height: 200,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
@@ -74,4 +78,20 @@ ipcMain.on("present-song", (event, songSlide) => {
   audienceWindow.webContents.executeJavaScript(`
     document.getElementById('songView').src = '../library/${songSlide}';
    `);
+});
+
+ipcMain.handle("open-list-dialog", async (event) => {
+  const result = await dialog.showOpenDialog({
+    title: "Pick a playlist",
+    properties: ["openFile"],
+  });
+  return result.filePaths[0];
+});
+
+ipcMain.handle("save-list-dialog", async (event) => {
+  const result = await dialog.showSaveDialog({
+    title: "Save playlist",
+    // defaultPath: path.resolve('./playlists/'),
+  });
+  return result.filePath;
 });

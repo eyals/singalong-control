@@ -1,7 +1,3 @@
-const fs = require("fs");
-const path = require("path");
-
-
 
 // Load all songs
 function loadSongs() {
