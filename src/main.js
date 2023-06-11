@@ -1,5 +1,5 @@
 const { app, BrowserWindow, ipcMain, screen } = require("electron");
-const path = require("path");
+// const path = require("path");
 
 // Enable live reload for all the files inside your project directory
 try {
@@ -20,7 +20,7 @@ function createWindow() {
     },
   });
 
-  mainWindow.loadFile("src/presenter.html");
+  mainWindow.loadFile("src/_control.html");
   // mainWindow.webContents.openDevTools();
 
 
@@ -36,7 +36,7 @@ function createWindow() {
     },
   });
 
-  audienceWindow.loadFile("src/audience.html");
+  audienceWindow.loadFile("src/_present.html");
   // audienceWindow.webContents.openDevTools();
 
   // to prevent audienceWindow from being closed directly...

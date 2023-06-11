@@ -60,7 +60,6 @@ function getQueue() {
 // Present a song in the queue
 function presentSong(index) {
   if (index < 0 || index >= songQueue.length) return;
-
   // Send a message to the main process to load the song in the audience view
   const songSlide = `${songQueue[index]}.pdf#toolbar=0&view=Fit&page=2`;
   ipcRenderer.send("present-song", songSlide);
