@@ -5,7 +5,7 @@ loadQueue();
 function addToQueue(song) {
   if (!song) return;
   // If the song already exists in the queue, remove it (it will be added to the end)
-  // removeFromQueue(song);
+  removeFromQueue(song);
   songQueue.push(song);
   updateQueue();
 }
@@ -108,7 +108,7 @@ document.addEventListener("drop", (event) => {
   event.preventDefault(); // prevent default action
   if (draggedQueueItem == null) return;
   removeFromQueue(draggedQueueItem);
-  let dropTargetIndex;;
+  let dropTargetIndex;
 
   if (["queueItem", "songName", "remove"].includes(event.target.className)) {
     const containingQueueItem = findContainingQueueItem(event.target);
@@ -133,14 +133,29 @@ function findContainingQueueItem(element) {
   }
 }
 
-function savePlaylist(name, playlist) {
+function savePlaylist() {
   ipcRenderer.invoke("save-list-dialog").then((filePath) => {
     console.log(filePath);
+    fs.writeFile(filePath, songQueue.join("\n"), (err) => {
+      if (err) {
+        console.log("Failed to save playlist");
+        return console.log(err);
+      }
+      console.log("Playlist saved");
+    });
   });
 }
 
-function loadPlaylist(name) {
+function loadPlaylist() {
   ipcRenderer.invoke("open-list-dialog").then((filePath) => {
     console.log(filePath);
+    fs.readFile(filePath, "utf8", (err, data) => {
+      if (err) {
+        console.log("Failed to read playlist");
+        return console.log(err);
+      }
+      songQueue = data.split("\n");
+      updateQueue();
+    });
   });
 }
