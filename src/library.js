@@ -26,17 +26,6 @@ function renderLibrary() {
   });
 }
 
-// Filter songs
-// function filterSongs() {
-//   const query = document.getElementById("search").value.toLowerCase();
-//   const libraryItems = document.querySelectorAll(".librarySong");
-
-//   libraryItems.forEach((item) => {
-//     item.style.display = item.ariaLabel.toLowerCase().includes(query)
-//       ? "block"
-//       : "none";
-//   });
-// }
 
 // Get selected song
 function getSelectedSong() {

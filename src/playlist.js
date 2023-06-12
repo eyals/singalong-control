@@ -1,3 +1,4 @@
+
 let playlist;
 let listTitle;
 const newPlaylistTitle = "New Playlist";
@@ -123,7 +124,6 @@ function updatePlaylistTitle() {
   document.getElementById("playlistTitle").innerText = listTitle;
 }
 
-
 function unsavedListPath() {
   return path.resolve(`./data/${newPlaylistTitle}.txt`);
 }
@@ -132,15 +132,13 @@ function unsavedListPath() {
 
 // Load the active playlist from the last session, or the default list if none exists
 function loadActivePlaylist() {
-  const filePath =
-    localStorage.getItem("listFilePath") ?? unsavedListPath();
+  const filePath = localStorage.getItem("listFilePath") ?? unsavedListPath();
   fs.readFile(filePath, "utf8", (err, data) => {
     if (err) {
       console.log("Failed to read playlist file");
       clearList();
     } else {
       playlist = data.trim().split("\n");
-
     }
     updatePlaylist();
     updatePlaylistTitle();
@@ -155,8 +153,7 @@ function openPlaylistFile() {
 }
 
 function savePlaylist() {
-  const filePath =
-    localStorage.getItem("listFilePath") ?? unsavedListPath();
+  const filePath = localStorage.getItem("listFilePath") ?? unsavedListPath();
   fs.writeFile(filePath, playlist.join("\n"), (err) => {
     if (err) console.log(err);
   });

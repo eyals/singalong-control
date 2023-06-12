@@ -1,5 +1,5 @@
 const { app, BrowserWindow, ipcMain, screen } = require("electron");
-const { dialog, session } = require("electron");
+const { dialog, session, Menu } = require("electron");
 const path = require("path");
 
 
@@ -19,7 +19,7 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     x: 0,
     y: 0,
-    width: screenSize.width  - 200,
+    width: Math.min(500,screenSize.width  - 200),
     height: screenSize.height,
     webPreferences: {
       nodeIntegration: true,
@@ -70,6 +70,7 @@ app.whenReady().then(() => {
     callback({ cancel: false, requestHeaders: details.requestHeaders });
   });
 
+  setMenu();
 
   screenSize = screen.getPrimaryDisplay().size;
   createWindow();
@@ -117,3 +118,60 @@ ipcMain.handle("save-list-dialog", async (event) => {
   });
   return result.filePath;
 });
+
+function setMenu() {
+  const menuTemplate = [
+    {
+      label: "File",
+      submenu: [
+        {
+          label: "Quit",
+          accelerator: "CmdOrCtrl+Q",
+          click() {
+            app.quit();
+          },
+        },
+      ],
+    },
+    {
+      label: "Library",
+      submenu: [
+        {
+          label: "Set library folder..",
+          click() {
+            console.log("Set library folder");
+          },
+        },
+      ],
+    },
+    {
+      label: "Playlist",
+      submenu: [
+        {
+          label: "Save as...",
+          accelerator: "CmdOrCtrl+S",
+          click() {
+            mainWindow.webContents.executeJavaScript(`savePlaylistAs();`);
+          },
+        },
+        {
+          label: "Open...",
+          accelerator: "CmdOrCtrl+O",
+          click() {
+            mainWindow.webContents.executeJavaScript(`openPlaylistFile();`);
+          },
+        },
+        {
+          label: "New",
+          accelerator: "CmdOrCtrl+N",
+          click() {
+            mainWindow.webContents.executeJavaScript(`clearList();`);
+          },
+        },
+      ],
+    },
+  ];
+
+  const menu = Menu.buildFromTemplate(menuTemplate);
+  Menu.setApplicationMenu(menu);
+}

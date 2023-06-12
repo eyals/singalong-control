@@ -1,109 +1,117 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="UTF-8">
-  <script src="common.js"></script>
-  <script src="library.js"></script>
-  <script src="playlist.js"></script>
-</head>
-<body>
-
-
-  <section id="library">
-    <h2>Library</h2>
-    <section id="searchBar">
-      <input type="text" id="search" placeholder="Search..." oninput="renderLibrary()" />
-      <button onclick="clearSearch()">⊗</button>
+  <head>
+    <meta charset="UTF-8" />
+    <script src="common.js"></script>
+    <script src="library.js"></script>
+    <script src="playlist.js"></script>
+  </head>
+  <body>
+    <section id="library">
+      <h2>Library</h2>
+      <section id="searchBar">
+        <input
+          type="text"
+          id="search"
+          placeholder="Search..."
+          oninput="renderLibrary()"
+        />
+        <button onclick="clearSearch()">⊗</button>
+      </section>
+      <section id="libraryList"></section>
     </section>
-    <section id="libraryList"></section>
-  </section>
 
-
-  <section id="playlist">
-    <h2 id="playlistTitle">...</h2>
-    <section id="playlistSongs"></section>
-    <button onclick="savePlaylistAs()">💾 Save as...</button>
-    <button onclick="openPlaylistFile()">📂 Open...</button>
-    <button onclick="clearList()">📃 New</button>
-  </section>
-
-
-  <section id="preview">
-    <iframe id="songView" border="none" ></iframe>
-    <section id="toolbar">
-      <button onclick="nextSong()">Next song</button>
+    <section id="playlist">
+      <h2 id="playlistTitle">...</h2>
+      <section id="playlistSongs"></section>
+      <section id="playlistControls">
+        <button onclick="savePlaylist()">💾 Save</button>
+        <button onclick="loadPlaylist()">📂 Open</button>
+        <button onclick="clearList()">📃 New</button>
+      </section>
     </section>
-  </section>
 
-</body>
-<script>
-  // Load all songs when the page loads
-  window.onload = loadSongs;
-</script>
+    <section id="preview">
+      <iframe id="songView" border="none"></iframe>
+      <section id="toolbar">
+        <button onclick="nextSong()">Next song</button>
+      </section>
+    </section>
+  </body>
+  <script>
+    // Load all songs when the page loads
+    window.onload = loadSongs;
+  </script>
 
-<style>
-  body{
-    margin: 0;
-    padding: 0;
-    background-color: #000;
-    color: #fff;
-    display: flex;
-    flex-direction: row;
-    align-items: stretch;
-    height:100vh;
-    font-family: sans-serif;
-  }
-  h2{
-    margin: 0;
-    padding: 0 0 10px 0;
-    font-size:16px;
-  }
-  #playlist, #library, #preview{
-    display: flex;
-    flex-direction: column;
-    padding: 5px;
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #000;
+      color: #fff;
+      display: flex;
+      flex-direction: row;
+      align-items: stretch;
+      height: 100vh;
+      font-family: sans-serif;
+    }
+    h2 {
+      margin: 0;
+      padding: 0 0 10px 0;
+      font-size: 16px;
+    }
+    #playlist,
+    #library,
+    #preview {
+      display: flex;
+      flex-direction: column;
+      padding: 5px;
+    }
+    #playlistSongs,
+    #libraryList,
+    #songView {
+      flex-grow: 1;
+      overflow-y: scroll;
+    }
+    #library,
+    #playlist {
+      width: 200px;
+    }
+    #searchBar {
+      display: flex;
+      flex-direction: row;
+    }
+    #searchBar input {
+      flex-grow: 1;
+    }
+    .listItem {
+      display: flex;
+      flex-direction: row;
+      height: 25px;
+    }
+    .listItem .songName {
+      flex-grow: 1;
+      white-space: nowrap;
+      max-lines: 1;
+      text-overflow: clip;
+      overflow: hidden;
+    }
+    .librarySong {
+      height: 25px;
+      max-lines: 1;
+      text-overflow: clip;
+      overflow: hidden;
+      width: 100%;
+    }
+    #playlistControls{
+      display:none;
+    }
 
-  }
-  #playlistSongs, #libraryList, #songView{
-    flex-grow: 1;
-    overflow-y: scroll;
-  }
-   #library,#playlist{
-    width:200px;
-  }
-  #searchBar{
-    display: flex;
-    flex-direction: row;
-
-  }
-  #searchBar input{
-    flex-grow: 1;
-  }
-  .listItem{
-    display: flex;
-    flex-direction: row;
-    height:25px;
-  }
-  .listItem .songName{
-    flex-grow: 1;
-    white-space: nowrap;
-    max-lines: 1;
-    text-overflow: clip;
-    overflow: hidden;
-  }
-  .librarySong{
-    height:25px;
-    max-lines: 1;
-    text-overflow: clip;
-    overflow: hidden;
-    width:100%;
-  }
-
-  #preview{
-    flex-grow: 1;
-  }
-  iframe{
-    border: none;
-  }
-</style>
+    #preview {
+      flex-grow: 1;
+    }
+    iframe {
+      border: none;
+    }
+  </style>
 </html>
