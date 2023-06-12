@@ -25,7 +25,7 @@ function createWindow() {
   });
 
   mainWindow.loadFile("src/_control.html");
-  mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools();
 
   audienceWindow = new BrowserWindow({
     x: screenSize.width - 200,
@@ -83,11 +83,19 @@ app.on("window-all-closed", function () {
 ipcMain.on("present-song", (event, songSlide) => {
   console.log(songSlide);
   mainWindow.webContents.executeJavaScript(`
-  document.getElementById('songView').src = '../library/${songSlide}';
+  document.getElementById('songView').src = '${songSlide}';
   `);
   audienceWindow.webContents.executeJavaScript(`
-  document.getElementById('songView').src = '../library/${songSlide}';
+  document.getElementById('songView').src = '${songSlide}';
    `);
+});
+
+ipcMain.handle("choose-library-path", async (event) => {
+  const result = await dialog.showOpenDialog({
+    title: "Pick a library folder",
+    properties: ["openDirectory"],
+  });
+  return result.filePaths[0];
 });
 
 ipcMain.handle("open-list-dialog", async (event) => {
@@ -140,9 +148,9 @@ function setMenu() {
       label: "Library",
       submenu: [
         {
-          label: "Set library folder..",
+          label: "Open library",
           click() {
-            console.log("Set library folder");
+            mainWindow.webContents.executeJavaScript(`chooseLibraryPath();`);
           },
         },
       ],

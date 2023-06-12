@@ -1,7 +1,22 @@
 let librarySongs = [];
+
+let libraryPath = localStorage.getItem("libraryPath");
+
+function chooseLibraryPath() {
+  ipcRenderer.invoke("choose-library-path").then((path) => {
+    if (path) {
+      libraryPath = path;
+      localStorage.setItem("libraryPath", path);
+      loadLibrary();
+    }
+  });
+}
+
+
 // Load all songs
-function loadSongs() {
-  fs.readdir("library", (err, files) => {
+function loadLibrary() {
+  if (!libraryPath) return;
+  fs.readdir(libraryPath, (err, files) => {
     if (err) throw err;
     librarySongs = files.map((file) => path.parse(file).name);
     renderLibrary();

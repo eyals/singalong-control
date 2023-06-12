@@ -87,7 +87,7 @@ async function presentSong(song) {
   curentSongPageIndex = 1;
   showCurrentSlide();
 
-  const songPath = path.resolve(`./library/${song}.pdf`);
+  const songPath = `${libraryPath}/${song}.pdf`;
   const pdfBytes = fs.readFileSync(songPath);
   const pdfDoc = await PDFDocument.load(pdfBytes);
   curentSongPageCount = pdfDoc.getPageCount();
@@ -101,11 +101,13 @@ function playlistNext() {
     presentSong(playlist[playlistIndex + 1]);
   }
 }
-
+//TODO: This method works but the screen flickers on every slide change.
+//TODO Consider https://pspdfkit.com/blog/2021/how-to-build-an-electron-pdf-viewer-with-pdfjs/
 function showCurrentSlide() {
+  if (libraryPath == null) return;
   //Random number to force iframe reload
   const rnd = Math.random();
-  const songSlide = `${playlist[playlistIndex]}.pdf?r=${rnd}#toolbar=0&view=Fit&page=${curentSongPageIndex}`;
+  const songSlide = `${libraryPath}/${playlist[playlistIndex]}.pdf?r=${rnd}#toolbar=0&view=Fit&page=${curentSongPageIndex}`;
   ipcRenderer.send("present-song", songSlide);
   // Updating progress text
   document.getElementById("progress").innerText = `${curentSongPageIndex} of ${curentSongPageCount}`;
