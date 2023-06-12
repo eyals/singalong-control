@@ -1,6 +1,11 @@
 
+const { PDFDocument } = require("pdf-lib");
+
 let playlist;
 let listTitle;
+let playlistIndex = 0;
+let curentSongPageIndex = 0;
+let curentSongPageCount = 0;
 const newPlaylistTitle = "New Playlist";
 
 loadActivePlaylist();
@@ -39,6 +44,7 @@ function updatePlaylist() {
       presentSong(song);
     };
     if (librarySongs.length > 0 && !librarySongs.includes(song)) {
+      listItem.ariaDisabled = true;
       listText.innerText += " ⚠️";
       listText.onclick = function () {
         alert('Song missing from library');
@@ -62,10 +68,48 @@ function updatePlaylist() {
 }
 
 // Present a song in the list
-function presentSong(song) {
+async function presentSong(song) {
+  playlistIndex = playlist.indexOf(song);
+  const playlistSongEl = document.getElementById("playlistSongs").children[playlistIndex];
+  if (playlistSongEl.ariaDisabled) {
+    presentSong(playlist[playlistIndex + 1]);
+    return;
+  }
+
+  // Highlight the song in the list
+  const playlistSongs = document.querySelectorAll("#playlistSongs .listItem");
+  for (let i = 0; i < playlistSongs.length; i++) {
+    playlistSongs[i].classList.remove("active");
+  }
+  playlistSongEl.classList.add("active");
+
   // Send a message to the main process to load the song in the audience view
-  const songSlide = `${song}.pdf#toolbar=0&view=Fit&page=2`;
+  const songSlide = `${song}.pdf#toolbar=0&view=Fit&page=1`;
   ipcRenderer.send("present-song", songSlide);
+
+  curentSongPageIndex = 1;
+  const songPath = path.resolve(`./library/${song}.pdf`);
+  const pdfBytes = fs.readFileSync(songPath);
+  const pdfDoc = await PDFDocument.load(pdfBytes);
+  curentSongPageCount = pdfDoc.getPageCount();
+  updatePageProgress();
+}
+
+function playlistNext() {
+  if (curentSongPageIndex < curentSongPageCount) {
+    curentSongPageIndex++;
+    const rnd = Math.random();
+    const songSlide = `${playlist[playlistIndex]}.pdf?r=${rnd}#toolbar=0&view=Fit&page=${curentSongPageIndex}`;
+    // console.log(songSlide);
+    ipcRenderer.send("present-song", songSlide);
+    updatePageProgress();
+  } else if (playlistIndex < playlist.length - 1) {
+    presentSong(playlist[playlistIndex + 1]);
+  }
+}
+
+function updatePageProgress() {
+  document.getElementById("progress").innerText = `${curentSongPageIndex} of ${curentSongPageCount}`;
 }
 
 function updatePlaylistTitle() {
@@ -95,6 +139,7 @@ function loadActivePlaylist() {
     }
     updatePlaylist();
     updatePlaylistTitle();
+    presentSong(playlist[0]);
   });
 }
 

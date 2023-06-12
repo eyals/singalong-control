@@ -34,7 +34,8 @@
     <section id="preview">
       <iframe id="songView" border="none"></iframe>
       <section id="toolbar">
-        <button onclick="nextSong()">Next song</button>
+        <button onclick="playlistNext()">Next</button>
+        <section id="progress">sss</section>
       </section>
     </section>
   </body>
@@ -108,12 +109,20 @@
     button{
       cursor: pointer;
     }
+    #playlistSongs .listItem.active .songName {
+      background:yellow;
+    }
     #playlistControls{
       display:none;
     }
 
     #preview {
       flex-grow: 1;
+    }
+    #preview #toolbar {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
     }
     iframe {
       border: none;

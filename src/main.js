@@ -2,16 +2,13 @@ const { app, BrowserWindow, ipcMain, screen } = require("electron");
 const { dialog, session, Menu } = require("electron");
 const path = require("path");
 
-
 // Enable live reload for all the files inside your project directory
 try {
-require("electron-reload")(path.join(__dirname, "src"), {
-  electron: require.resolve("electron"),
-  hardResetMethod: "exit",
-});} catch (_) {}
-
-
-
+  require("electron-reload")(path.join(__dirname, "src"), {
+    electron: require.resolve("electron"),
+    hardResetMethod: "exit",
+  });
+} catch (_) {}
 
 let mainWindow, audienceWindow, screenSize;
 
@@ -19,7 +16,7 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     x: 0,
     y: 0,
-    width: Math.min(800,screenSize.width  - 200),
+    width: Math.min(800, screenSize.width - 200),
     height: screenSize.height,
     webPreferences: {
       nodeIntegration: true,
@@ -29,8 +26,6 @@ function createWindow() {
 
   mainWindow.loadFile("src/_control.html");
   mainWindow.webContents.openDevTools();
-
-
 
   audienceWindow = new BrowserWindow({
     x: screenSize.width - 200,
@@ -86,11 +81,12 @@ app.on("window-all-closed", function () {
 
 // Listen for the 'present-song' message and load the song into the iframe in the main window and audience window
 ipcMain.on("present-song", (event, songSlide) => {
+  console.log(songSlide);
   mainWindow.webContents.executeJavaScript(`
-    document.getElementById('songView').src = '../library/${songSlide}';
-   `);
+  document.getElementById('songView').src = '../library/${songSlide}';
+  `);
   audienceWindow.webContents.executeJavaScript(`
-    document.getElementById('songView').src = '../library/${songSlide}';
+  document.getElementById('songView').src = '../library/${songSlide}';
    `);
 });
 
@@ -125,6 +121,13 @@ function setMenu() {
       label: "File",
       submenu: [
         {
+          label: "Reload",
+          accelerator: "CmdOrCtrl+R",
+          click() {
+            mainWindow.reload();
+          },
+        },
+        {
           label: "Quit",
           accelerator: "CmdOrCtrl+Q",
           click() {
@@ -147,6 +150,13 @@ function setMenu() {
     {
       label: "Playlist",
       submenu: [
+        {
+          label: "Next slide",
+          accelerator: "B",
+          click() {
+            mainWindow.webContents.executeJavaScript(`playlistNext();`);
+          },
+        },
         {
           label: "Save as...",
           accelerator: "CmdOrCtrl+S",
