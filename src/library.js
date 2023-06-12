@@ -18,7 +18,7 @@ function renderLibrary() {
     const libraryItem = document.createElement("button");
     libraryItem.className = "librarySong";
     libraryItem.ariaLabel = song;
-    libraryItem.innerText = song;
+    libraryItem.innerText = `➕ ${song}`;
     libraryItem.onclick = function () {
       addToList(song);
     };

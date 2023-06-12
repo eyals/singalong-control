@@ -19,7 +19,7 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     x: 0,
     y: 0,
-    width: Math.min(500,screenSize.width  - 200),
+    width: Math.min(800,screenSize.width  - 200),
     height: screenSize.height,
     webPreferences: {
       nodeIntegration: true,

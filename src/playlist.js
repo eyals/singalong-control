@@ -9,13 +9,13 @@ loadActivePlaylist();
 function addToList(song) {
   if (!song) return;
   // If the song already exists in the list, remove it (it will be added to the end)
-  removeFromPlaylist(song);
+  removeFromList(song);
   playlist.push(song);
   updatePlaylist();
 }
 
 // Remove song from list
-function removeFromPlaylist(song) {
+function removeFromList(song) {
   if (!song || !playlist.includes(song)) return;
   playlist.splice(playlist.indexOf(song), 1);
   updatePlaylist();
@@ -38,17 +38,23 @@ function updatePlaylist() {
     listText.onclick = function () {
       presentSong(song);
     };
-    listItem.appendChild(listText);
+    if (librarySongs.length > 0 && !librarySongs.includes(song)) {
+      listText.innerText += " ⚠️";
+      listText.onclick = function () {
+        alert('Song missing from library');
+      };
+    }
 
     // Add a 'remove' button
     const removeButton = document.createElement("button");
     removeButton.className = "remove";
     removeButton.innerText = "🚫";
     removeButton.onclick = function () {
-      removeFromPlaylist(song);
+      removeFromList(song);
     };
-    listItem.appendChild(removeButton);
 
+    listItem.appendChild(removeButton);
+    listItem.appendChild(listText);
     playlistEl.appendChild(listItem);
   });
 
@@ -62,61 +68,6 @@ function presentSong(song) {
   ipcRenderer.send("present-song", songSlide);
 }
 
-//! --------- DRAGGING ----------
-
-let draggedlistItem = null;
-
-// event fired when the dragging starts
-document.addEventListener("dragstart", (event) => {
-  if (event.target.className == "listItem") {
-    draggedlistItem = event.target.ariaLabel;
-  } else {
-    draggedlistItem = null;
-  }
-});
-
-// event fired when the dragged element enters a drop target
-document.addEventListener("dragover", (event) => {
-  event.preventDefault(); // prevent default to allow drop
-});
-
-// event fired when the dragged element is dropped into a target
-document.addEventListener("drop", (event) => {
-  event.preventDefault(); // prevent default action
-  if (draggedlistItem == null) return;
-  removeFromPlaylist(draggedlistItem);
-  let dropTargetIndex;
-
-  if (["listItem", "songName", "remove"].includes(event.target.className)) {
-    const containinglistItem = findContaininglistItem(event.target);
-    console.log(containinglistItem);
-    dropTargetIndex = playlist.indexOf(containinglistItem.ariaLabel);
-  } else {
-    dropTargetIndex = playlist.length;
-  }
-  playlist.splice(dropTargetIndex, 0, draggedlistItem);
-  draggedlistItem = null;
-  updatePlaylist();
-});
-
-// Find the playlist item that contains the given element (recursively)
-function findContaininglistItem(element) {
-  if (element.className == "listItem") {
-    return element;
-  } else if (element.parentElement) {
-    return findContaininglistItem(element.parentElement);
-  } else {
-    return null;
-  }
-}
-
-function clearList() {
-  localStorage.setItem("listFilePath", unsavedListPath());
-  playlist = [];
-  updatePlaylist();
-  updatePlaylistTitle();
-}
-
 function updatePlaylistTitle() {
   const filePath = localStorage.getItem("listFilePath") ?? unsavedListPath();
   listTitle = filePath.split("/").pop();
@@ -124,11 +75,13 @@ function updatePlaylistTitle() {
   document.getElementById("playlistTitle").innerText = listTitle;
 }
 
+
+
+//! --------- OPEN / SAVE / NEW ----------
+
 function unsavedListPath() {
   return path.resolve(`./data/${newPlaylistTitle}.txt`);
 }
-
-//! --------- LOADING AND SAVING ----------
 
 // Load the active playlist from the last session, or the default list if none exists
 function loadActivePlaylist() {
@@ -165,4 +118,60 @@ function savePlaylistAs() {
     savePlaylist();
     updatePlaylistTitle();
   });
+}
+
+function clearList() {
+  localStorage.setItem("listFilePath", unsavedListPath());
+  playlist = [];
+  updatePlaylist();
+  updatePlaylistTitle();
+}
+
+
+//! --------- DRAGGING ----------
+
+let draggedlistItem = null;
+
+// event fired when the dragging starts
+document.addEventListener("dragstart", (event) => {
+  if (event.target.className == "listItem") {
+    draggedlistItem = event.target.ariaLabel;
+  } else {
+    draggedlistItem = null;
+  }
+});
+
+// event fired when the dragged element enters a drop target
+document.addEventListener("dragover", (event) => {
+  event.preventDefault(); // prevent default to allow drop
+});
+
+// event fired when the dragged element is dropped into a target
+document.addEventListener("drop", (event) => {
+  event.preventDefault(); // prevent default action
+  if (draggedlistItem == null) return;
+  removeFromList(draggedlistItem);
+  let dropTargetIndex;
+
+  if (["listItem", "songName", "remove"].includes(event.target.className)) {
+    const containinglistItem = findContaininglistItem(event.target);
+    console.log(containinglistItem);
+    dropTargetIndex = playlist.indexOf(containinglistItem.ariaLabel);
+  } else {
+    dropTargetIndex = playlist.length;
+  }
+  playlist.splice(dropTargetIndex, 0, draggedlistItem);
+  draggedlistItem = null;
+  updatePlaylist();
+});
+
+// Find the playlist item that contains the given element (recursively)
+function findContaininglistItem(element) {
+  if (element.className == "listItem") {
+    return element;
+  } else if (element.parentElement) {
+    return findContaininglistItem(element.parentElement);
+  } else {
+    return null;
+  }
 }
