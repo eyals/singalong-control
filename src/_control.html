@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <script src="common.js"></script>
   <script src="search.js"></script>
-  <script src="queue.js"></script>
+  <script src="playlist.js"></script>
 </head>
 <body>
   <section id="library">
@@ -12,11 +12,12 @@
     <input type="text" id="search" placeholder="Search..." oninput="filterSongs()" />
     <section id="songList"></section>
   </section>
-  <section id="queue">
-    <h2>Queue</h2>
-    <section id="queueList"></section>
-    <button onclick="savePlaylist('myPlaylist', getQueue())">Save playlist</button>
-    <button onclick="loadPlaylist('myPlaylist')">Load playlist</button>
+  <section id="playlist">
+    <h2 id="playlistTitle">...</h2>
+    <section id="playlistSongs"></section>
+    <button onclick="savePlaylistAs()">💾 Save as...</button>
+    <button onclick="openPlaylistFile()">📂 Open...</button>
+    <button onclick="clearList()">📃 New</button>
   </section>
   <section id="preview">
     <iframe id="songView"></iframe>
@@ -48,12 +49,12 @@
     padding: 0 0 10px 0;
     font-size:16px;
   }
-  #queue, #library, #preview{
+  #playlist, #library, #preview{
     display: flex;
     flex-direction: column;
     padding: 5px;
   }
-  #queueList, #songList, #songView{
+  #playlistSongs, #songList, #songView{
     flex-grow: 1;
     overflow-y: scroll;
   }

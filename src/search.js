@@ -14,9 +14,9 @@ function loadSongs() {
       const listItem = document.createElement('section');
       listItem.innerText = path.parse(file).name;
 
-      // Add 'onclick' listener to add the song to queue when clicked
+      // Add 'onclick' listener to add the song to playlist when clicked
       listItem.onclick = function() {
-        addToQueue(path.parse(file).name);
+        addToList(path.parse(file).name);
       };
 
       songList.appendChild(listItem);

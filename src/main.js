@@ -1,5 +1,5 @@
 const { app, BrowserWindow, ipcMain, screen } = require("electron");
-const { dialog } = require("electron");
+const { dialog, session } = require("electron");
 const path = require("path");
 
 
@@ -9,6 +9,9 @@ require("electron-reload")(path.join(__dirname, "src"), {
   electron: require.resolve("electron"),
   hardResetMethod: "exit",
 });} catch (_) {}
+
+
+
 
 let mainWindow, audienceWindow, screenSize;
 
@@ -58,6 +61,16 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
+  // Prevent cache
+  session.defaultSession.webRequest.onBeforeSendHeaders((details, callback) => {
+    details.requestHeaders["Cache-Control"] =
+      "no-cache, no-store, must-revalidate";
+    details.requestHeaders["Pragma"] = "no-cache";
+    details.requestHeaders["Expires"] = "0";
+    callback({ cancel: false, requestHeaders: details.requestHeaders });
+  });
+
+
   screenSize = screen.getPrimaryDisplay().size;
   createWindow();
 
@@ -84,6 +97,10 @@ ipcMain.handle("open-list-dialog", async (event) => {
   const result = await dialog.showOpenDialog({
     title: "Pick a playlist",
     properties: ["openFile"],
+    filters: [
+      { name: "Text Files", extensions: ["txt"] },
+      { name: "All Files", extensions: ["*"] },
+    ],
   });
   return result.filePaths[0];
 });
@@ -91,6 +108,11 @@ ipcMain.handle("open-list-dialog", async (event) => {
 ipcMain.handle("save-list-dialog", async (event) => {
   const result = await dialog.showSaveDialog({
     title: "Save playlist",
+    defaultPath: "playlist.txt",
+    filters: [
+      { name: "Text Files", extensions: ["txt"] },
+      { name: "All Files", extensions: ["*"] },
+    ],
     // defaultPath: path.resolve('./playlists/'),
   });
   return result.filePath;
