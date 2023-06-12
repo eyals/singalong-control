@@ -113,6 +113,7 @@ function clearList() {
   localStorage.setItem("listFilePath", unsavedListPath());
   playlist = [];
   updatePlaylist();
+  updatePlaylistTitle();
 }
 
 function updatePlaylistTitle() {
@@ -165,5 +166,6 @@ function savePlaylistAs() {
   ipcRenderer.invoke("save-list-dialog").then((filePath) => {
     localStorage.setItem("listFilePath", filePath);
     savePlaylist();
+    updatePlaylistTitle();
   });
 }
