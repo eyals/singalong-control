@@ -84,33 +84,33 @@ async function presentSong(song) {
   playlistSongEl.classList.add("active");
 
   // Send a message to the main process to load the song in the audience view
-  const songSlide = `${song}.pdf#toolbar=0&view=Fit&page=1`;
-  ipcRenderer.send("present-song", songSlide);
-
   curentSongPageIndex = 1;
+  showCurrentSlide();
+
   const songPath = path.resolve(`./library/${song}.pdf`);
   const pdfBytes = fs.readFileSync(songPath);
   const pdfDoc = await PDFDocument.load(pdfBytes);
   curentSongPageCount = pdfDoc.getPageCount();
-  updatePageProgress();
 }
 
 function playlistNext() {
   if (curentSongPageIndex < curentSongPageCount) {
     curentSongPageIndex++;
-    const rnd = Math.random();
-    const songSlide = `${playlist[playlistIndex]}.pdf?r=${rnd}#toolbar=0&view=Fit&page=${curentSongPageIndex}`;
-    // console.log(songSlide);
-    ipcRenderer.send("present-song", songSlide);
-    updatePageProgress();
+    showCurrentSlide();
   } else if (playlistIndex < playlist.length - 1) {
     presentSong(playlist[playlistIndex + 1]);
   }
 }
 
-function updatePageProgress() {
+function showCurrentSlide() {
+  //Random number to force iframe reload
+  const rnd = Math.random();
+  const songSlide = `${playlist[playlistIndex]}.pdf?r=${rnd}#toolbar=0&view=Fit&page=${curentSongPageIndex}`;
+  ipcRenderer.send("present-song", songSlide);
+  // Updating progress text
   document.getElementById("progress").innerText = `${curentSongPageIndex} of ${curentSongPageCount}`;
 }
+
 
 function updatePlaylistTitle() {
   const filePath = localStorage.getItem("listFilePath") ?? unsavedListPath();
