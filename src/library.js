@@ -18,7 +18,9 @@ function loadLibrary() {
   if (!libraryPath) return;
   fs.readdir(libraryPath, (err, files) => {
     if (err) throw err;
-    librarySongs = files.map((file) => path.parse(file).name);
+    librarySongs = files
+      .filter((file) => path.parse(file).ext == ".pdf")
+      .map((file) => path.parse(file).name);
     renderLibrary();
   });
 }
@@ -34,13 +36,26 @@ function renderLibrary() {
     libraryItem.className = "librarySong";
     libraryItem.ariaLabel = song;
     libraryItem.innerText = `➕ ${song}`;
+    if (playlist != null && playlist.includes(song)) {
+      libraryItem.innerText = `✅ ${song}`;
+    }
     libraryItem.onclick = function () {
       addToList(song);
     };
     libraryList.appendChild(libraryItem);
   });
+
+  if (query) {
+    document.getElementById("searchBar").classList.add("active");
+  } else {
+    document.getElementById("searchBar").classList.remove("active");
+  }
 }
 
+function clearSearch() {
+  document.getElementById("search").value = "";
+  renderLibrary();
+}
 
 // Get selected song
 function getSelectedSong() {

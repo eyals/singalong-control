@@ -25,7 +25,7 @@ function createWindow() {
   });
 
   mainWindow.loadFile("src/_control.html");
-  // mainWindow.webContents.openDevTools();
+  mainWindow.webContents.openDevTools();
 
   audienceWindow = new BrowserWindow({
     x: screenSize.width - 200,

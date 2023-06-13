@@ -61,6 +61,15 @@
       padding: 0 0 10px 0;
       font-size: 16px;
     }
+    button{
+      cursor: pointer;
+      background-color: #eee;
+      border:1px solid black;
+      border-radius:3px;
+    }
+    button:hover{
+      background-color: #ddd;
+    }
     #playlist,
     #library,
     #preview {
@@ -81,9 +90,28 @@
     #searchBar {
       display: flex;
       flex-direction: row;
+      height:35px;
+      margin-bottom: 3px;
+      position:relative;
     }
     #searchBar input {
       flex-grow: 1;
+      font-size:18px;
+      border: none;
+      border-radius: 3px;
+    }
+    #searchBar button {
+      display:none;
+      position:absolute;
+      right:3px;
+      top:3px;
+      height: 29px;
+    }
+    #searchBar.active input {
+      background-color: #D3FF54;
+    }
+    #searchBar.active button {
+      display:inline-block;
     }
     .listItem {
       display: flex;
@@ -105,12 +133,13 @@
       text-overflow: clip;
       overflow: hidden;
       width: 100%;
-    }
-    button{
-      cursor: pointer;
+      cursor:e-resize;
     }
     #playlistSongs .listItem.active .songName {
-      background:yellow;
+      background:#D3FF54;
+    }
+    #playlistSongs .remove {
+      cursor: w-resize;
     }
     #playlistControls{
       display:none;

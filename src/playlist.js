@@ -1,8 +1,8 @@
 
 const { PDFDocument } = require("pdf-lib");
 
-let playlist;
-let listTitle;
+let playlist = [];
+let listTitle = '';
 let playlistIndex = 0;
 let curentSongPageIndex = 0;
 let curentSongPageCount = 0;
@@ -57,11 +57,12 @@ function updatePlaylist() {
     removeButton.innerText = "🚫";
     removeButton.onclick = function () {
       removeFromList(song);
-    };
+    };``
 
     listItem.appendChild(removeButton);
     listItem.appendChild(listText);
     playlistEl.appendChild(listItem);
+    renderLibrary();
   });
 
   savePlaylist();
