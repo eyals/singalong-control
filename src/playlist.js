@@ -1,6 +1,7 @@
+const { PDFDocument } = require("pdf-lib");
 
 let playlist = [];
-let listTitle = '';
+let listTitle = "";
 let playlistIndex = 0;
 let curentSongPageIndex = 0;
 let curentSongPageCount = 0;
@@ -45,7 +46,7 @@ function updatePlaylist() {
       listItem.ariaDisabled = true;
       listText.innerText += " ⚠️";
       listText.onclick = function () {
-        alert('Song missing from library');
+        alert("Song missing from library");
       };
     }
 
@@ -55,7 +56,8 @@ function updatePlaylist() {
     removeButton.innerText = "🚫";
     removeButton.onclick = function () {
       removeFromList(song);
-    };``
+    };
+    ``;
 
     listItem.appendChild(removeButton);
     listItem.appendChild(listText);
@@ -69,7 +71,8 @@ function updatePlaylist() {
 // Present a song in the list
 async function presentSong(song) {
   playlistIndex = playlist.indexOf(song);
-  const playlistSongEl = document.getElementById("playlistSongs").children[playlistIndex];
+  const playlistSongEl =
+    document.getElementById("playlistSongs").children[playlistIndex];
   if (playlistSongEl.ariaDisabled) {
     presentSong(playlist[playlistIndex + 1]);
     return;
@@ -109,9 +112,10 @@ function showCurrentSlide() {
   const songSlide = `${libraryPath}/${playlist[playlistIndex]}.pdf?r=${rnd}#toolbar=0&view=Fit&page=${curentSongPageIndex}`;
   ipcRenderer.send("present-song", songSlide);
   // Updating progress text
-  document.getElementById("progress").innerText = `${curentSongPageIndex} of ${curentSongPageCount}`;
+  document.getElementById(
+    "progress"
+  ).innerText = `${curentSongPageIndex} of ${curentSongPageCount}`;
 }
-
 
 function updatePlaylistTitle() {
   const filePath = localStorage.getItem("listFilePath") ?? unsavedListPath();
@@ -119,8 +123,6 @@ function updatePlaylistTitle() {
   if (listTitle.includes(".")) listTitle = listTitle.split(".")[0];
   document.getElementById("playlistTitle").innerText = listTitle;
 }
-
-
 
 //! --------- OPEN / SAVE / NEW ----------
 
@@ -174,7 +176,6 @@ function clearList() {
   updatePlaylist();
   updatePlaylistTitle();
 }
-
 
 //! --------- DRAGGING ----------
 
