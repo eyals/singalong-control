@@ -1,6 +1,4 @@
 
-const { PDFDocument } = require("pdf-lib");
-
 let playlist = [];
 let listTitle = '';
 let playlistIndex = 0;
@@ -148,6 +146,7 @@ function loadActivePlaylist() {
 
 function openPlaylistFile() {
   ipcRenderer.invoke("open-list-dialog").then((filePath) => {
+    if (!filePath) return;
     localStorage.setItem("listFilePath", filePath);
     loadActivePlaylist();
   });
@@ -162,6 +161,7 @@ function savePlaylist() {
 
 function savePlaylistAs() {
   ipcRenderer.invoke("save-list-dialog").then((filePath) => {
+    if (!filePath) return;
     localStorage.setItem("listFilePath", filePath);
     savePlaylist();
     updatePlaylistTitle();

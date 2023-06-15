@@ -66,6 +66,7 @@
       background-color: #eee;
       border:1px solid black;
       border-radius:3px;
+      font-size:16px;
     }
     button:hover{
       background-color: #ddd;
@@ -134,6 +135,17 @@
       overflow: hidden;
       width: 100%;
       cursor:e-resize;
+    }
+    .librarySong::before {
+      content: "➕";
+      margin-right: 5px;
+    }
+    .librarySong.added {
+      background-color: #ccc;
+    }
+    .librarySong.added::before {
+      content: "✔️";
+      margin-right: 5px;
     }
     #playlistSongs .listItem.active .songName {
       background:#D3FF54;

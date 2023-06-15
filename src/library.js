@@ -35,9 +35,11 @@ function renderLibrary() {
     const libraryItem = document.createElement("button");
     libraryItem.className = "librarySong";
     libraryItem.ariaLabel = song;
-    libraryItem.innerText = `➕ ${song}`;
+    libraryItem.innerText = `${song}`;
     if (playlist != null && playlist.includes(song)) {
-      libraryItem.innerText = `✅ ${song}`;
+      libraryItem.classList.add("added");
+    } else {
+      libraryItem.classList.remove("added");
     }
     libraryItem.onclick = function () {
       addToList(song);
