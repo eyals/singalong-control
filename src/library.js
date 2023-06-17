@@ -30,7 +30,7 @@ function renderLibrary() {
   libraryList.innerHTML = "";
 
   librarySongs.forEach((song) => {
-    if (query && !song.toLowerCase().includes(query)) return;
+    if (query && !songNameMatchesQuery(song,query)) return;
     const libraryItem = document.createElement("button");
     libraryItem.className = "librarySong";
     libraryItem.ariaLabel = song;
@@ -51,6 +51,18 @@ function renderLibrary() {
   } else {
     document.getElementById("searchBar").classList.remove("active");
   }
+}
+
+function songNameMatchesQuery(songName, query) {
+  const queryParts = query.toLowerCase().split(" ");
+  // Split song name into parts by any non alphanumeric character
+  const songParts = songName
+    .toLowerCase()
+    //FIXME: Searching for ש finds irrelevant songs
+    .replace(/[^a-zA-Z0-9\u0590-\u05FF]+/g, " ")
+    .split(" ");
+  // Check if all query parts appear at the beginning of song parts
+  return queryParts.every((queryPart) => songParts.some((songPart) => songPart.startsWith(queryPart)));
 }
 
 function clearSearch() {
