@@ -19,21 +19,17 @@ document.addEventListener("keydown", function (event) {
     clearSearch();
   }
   //Spacebar to advance slide (unless during search)
-  //ALT + spacebar to go back one slide
-  if (event.key === " ") {
-    if (document.activeElement === document.getElementById("search")) return;
-    event.preventDefault();
-    if (event.key === "Alt") {
-      //TODO: Go back one slide
-    } else {
-      playlistNext();
-    }
-  }
-  if (event.key === " ") {
+  if (event.key === " " || event.key === "ArrowDown") {
     if (document.activeElement === document.getElementById("search")) return;
     event.preventDefault();
     playlistNext();
   }
+  //Arrow Up to move back a slide
+  if (event.key === "ArrowUp") {
+    event.preventDefault();
+    playlistPrevious();
+  }
+
   // Left/Right arrows to move songs in playlist
   if (event.key === "ArrowLeft") {
     event.preventDefault();

@@ -72,7 +72,7 @@ function updatePlaylist() {
 }
 
 // Present a song in the list
-async function presentSong(song) {
+async function presentSong(song, skipToLastSlide = false) {
   playlistIndex = playlist.indexOf(song);
   const playlistSongEl =
     document.getElementById("playlistSongs").children[playlistIndex];
@@ -94,7 +94,7 @@ async function presentSong(song) {
   const pdfDoc = await PDFDocument.load(pdfBytes);
   curentSongPageCount = pdfDoc.getPageCount();
 
-  curentSongPageIndex = 1;
+  curentSongPageIndex = skipToLastSlide ? curentSongPageCount : 1;
   showCurrentSlide();
 }
 
@@ -106,6 +106,18 @@ function playlistNext() {
     presentSong(playlist[playlistIndex + 1]);
   }
 }
+
+function playlistPrevious() {
+  if (curentSongPageIndex > 1) {
+    curentSongPageIndex--;
+    showCurrentSlide();
+  } else if (playlistIndex > 0) {
+    presentSong(playlist[playlistIndex - 1], true);
+
+  }
+}
+
+
 //TODO: This method works but the screen flickers on every slide change.
 //TODO Consider https://pspdfkit.com/blog/2021/how-to-build-an-electron-pdf-viewer-with-pdfjs/
 function showCurrentSlide() {
