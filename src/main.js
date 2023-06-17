@@ -16,7 +16,7 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     x: 0,
     y: 0,
-    width: Math.min(800, screenSize.width - 200),
+    width: Math.min(1200, screenSize.width - 200),
     height: screenSize.height,
     webPreferences: {
       nodeIntegration: true,
@@ -97,6 +97,17 @@ ipcMain.handle("choose-library-path", async (event) => {
   });
   return result.filePaths[0];
 });
+ipcMain.handle("choose-info-slide", async (event) => {
+  const result = await dialog.showOpenDialog({
+    title: "Pick an info PDF",
+    properties: ["openFile"],
+    filters: [
+      { name: "Text Files", extensions: ["pdf"] },
+      { name: "All Files", extensions: ["*"] },
+    ],
+  });
+  return result.filePaths[0];
+});
 
 ipcMain.handle("open-list-dialog", async (event) => {
   const result = await dialog.showOpenDialog({
@@ -148,9 +159,15 @@ function setMenu() {
       label: "Library",
       submenu: [
         {
-          label: "Open library",
+          label: "Open library...",
           click() {
             mainWindow.webContents.executeJavaScript(`chooseLibraryPath();`);
+          },
+        },
+        {
+          label: "Choose info slide...",
+          click() {
+            mainWindow.webContents.executeJavaScript(`chooseInfoSlide();`);
           },
         },
       ],
@@ -158,13 +175,6 @@ function setMenu() {
     {
       label: "Playlist",
       submenu: [
-        {
-          label: "Next slide",
-          accelerator: "B",
-          click() {
-            mainWindow.webContents.executeJavaScript(`playlistNext();`);
-          },
-        },
         {
           label: "Save as...",
           accelerator: "CmdOrCtrl+S",

@@ -12,7 +12,6 @@ function chooseLibraryPath() {
   });
 }
 
-
 // Load all songs
 function loadLibrary() {
   if (!libraryPath) return;
@@ -68,4 +67,36 @@ function getSelectedSong() {
   const selectedSong = songs.find((song) => song.style.display !== "none");
 
   return selectedSong ? selectedSong.innerText : null;
+}
+
+//! -------- INFO SLIDE --------------
+
+function chooseInfoSlide() {
+  ipcRenderer.invoke("choose-info-slide").then((path) => {
+    if (path) {
+      infoSlidePath = path;
+      localStorage.setItem("infoSlidePath", path);
+      showInfoSlide();
+    }
+  });
+}
+
+let infoSlideShown = false;
+function showInfoSlide(toShow = true) {
+  console.log(toShow);
+  console.log(localStorage.getItem("infoSlidePath"));
+  if (toShow) {
+    if (localStorage.getItem("infoSlidePath") == null) return;
+    ipcRenderer.send(
+      "present-song",
+      `${localStorage.getItem("infoSlidePath")}#toolbar=0&view=Fit`
+    );
+    infoSlideShown = true;
+  } else {
+    showCurrentSlide();
+    infoSlideShown = false;
+  }
+}
+function toggleInfoSlide() {
+  showInfoSlide(!infoSlideShown);
 }

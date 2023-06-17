@@ -117,6 +117,15 @@ function showCurrentSlide() {
   ).innerText = `${curentSongPageIndex} of ${curentSongPageCount}`;
 }
 
+function jumpToPreviousSong() {
+  const newSongIndex = Math.max(0, playlistIndex - 1);
+  presentSong(playlist[newSongIndex]);
+}
+function jumpToNextSong() {
+  const newSongIndex = Math.min(playlist.length - 1, playlistIndex + 1);
+  presentSong(playlist[newSongIndex]);
+}
+
 function updatePlaylistTitle() {
   const filePath = localStorage.getItem("listFilePath") ?? unsavedListPath();
   listTitle = filePath.split("/").pop();
@@ -204,7 +213,6 @@ document.addEventListener("drop", (event) => {
 
   if (["listItem", "songName", "remove"].includes(event.target.className)) {
     const containinglistItem = findContaininglistItem(event.target);
-    console.log(containinglistItem);
     dropTargetIndex = playlist.indexOf(containinglistItem.ariaLabel);
   } else {
     dropTargetIndex = playlist.length;
