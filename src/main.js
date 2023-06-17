@@ -31,7 +31,7 @@ function createWindow() {
     x: screenSize.width - 200,
     y: 0,
     width: 200,
-    height: 200,
+    height: 150,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,

@@ -12,10 +12,13 @@ loadActivePlaylist();
 // Add song to playlist
 function addToList(song) {
   if (!song) return;
-  // If the song already exists in the list, remove it (it will be added to the end)
+  // If the song already exists in the list, remove it (it will be added to the new position)
   removeFromList(song);
-  playlist.push(song);
+  // Adds the song after the current song
+  playlist.splice(playlistIndex + 1, 0, song);
   updatePlaylist();
+  //FIXME: Not highlighting the added song
+  presentSong(song);
 }
 
 // Remove song from list
@@ -85,14 +88,14 @@ async function presentSong(song) {
   }
   playlistSongEl.classList.add("active");
 
-  // Send a message to the main process to load the song in the audience view
-  curentSongPageIndex = 1;
-  showCurrentSlide();
-
+  // Getting the number of slides in the song
   const songPath = `${libraryPath}/${song}.pdf`;
   const pdfBytes = fs.readFileSync(songPath);
   const pdfDoc = await PDFDocument.load(pdfBytes);
   curentSongPageCount = pdfDoc.getPageCount();
+
+  curentSongPageIndex = 1;
+  showCurrentSlide();
 }
 
 function playlistNext() {
@@ -114,7 +117,7 @@ function showCurrentSlide() {
   // Updating progress text
   document.getElementById(
     "progress"
-  ).innerText = `${curentSongPageIndex} of ${curentSongPageCount}`;
+  ).innerText = `${curentSongPageIndex} מתוך ${curentSongPageCount}`;
 }
 
 function jumpToPreviousSong() {
