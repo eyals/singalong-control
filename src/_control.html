@@ -54,21 +54,25 @@
       align-items: stretch;
       height: 100vh;
       font-family: sans-serif;
-      direction:rtl;
+      direction: rtl;
     }
     h2 {
       margin: 0;
       padding: 0 0 10px 0;
       font-size: 16px;
     }
-    button{
+    button {
       cursor: pointer;
       background-color: #eee;
-      border:1px solid black;
-      border-radius:3px;
-      font-size:16px;
+      border: 1px solid black;
+      border-radius: 3px;
+      font-size: 16px;
+      min-height: 25px;
+      overflow: hidden;
+      text-overflow: clip;
+      white-space: nowrap;
     }
-    button:hover{
+    button:hover {
       background-color: #ddd;
     }
     #playlist,
@@ -84,6 +88,11 @@
       flex-grow: 1;
       overflow-y: scroll;
     }
+    #playlistSongs::-webkit-scrollbar,
+    #libraryList::-webkit-scrollbar,
+     #songView::-webkit-scrollbar {
+    display: none;
+}
     #library,
     #playlist {
       width: 200px;
@@ -91,33 +100,33 @@
     #searchBar {
       display: flex;
       flex-direction: row;
-      height:35px;
+      height: 35px;
       margin-bottom: 3px;
-      position:relative;
+      position: relative;
     }
     #searchBar input {
       flex-grow: 1;
-      font-size:18px;
+      font-size: 18px;
       border: none;
       border-radius: 3px;
     }
     #searchBar button {
-      display:none;
-      position:absolute;
-      left:3px;
-      top:3px;
+      display: none;
+      position: absolute;
+      left: 3px;
+      top: 3px;
       height: 29px;
       font-size: 30px;
-      padding:0;
+      padding: 0;
       line-height: 100%;
-      background:none;
-      border:none;
+      background: none;
+      border: none;
     }
     #searchBar.active input {
-      background-color: #D3FF54;
+      background-color: #d3ff54;
     }
     #searchBar.active button {
-      display:inline-block;
+      display: inline-block;
     }
     .listItem {
       display: flex;
@@ -126,38 +135,38 @@
     }
     .listItem .songName {
       flex-grow: 1;
-      white-space: nowrap;
-      max-lines: 1;
-      text-overflow: clip;
-      overflow: hidden;
+      /* white-space: nowrap; */
+      /* max-lines: 1; */
+      /* text-overflow: clip;
+      overflow: hidden; */
       text-align: right;
     }
     .librarySong {
-      height: 25px;
+      /* height: 25px; */
       text-align: right;
-      max-lines: 1;
-      text-overflow: clip;
-      overflow: hidden;
+      /* max-lines: 1; */
+      /* text-overflow: clip;
+      overflow: hidden; */
       width: 100%;
     }
-    .librarySong::before {
+    /* .librarySong::before {
       content: "➕";
       margin-left: 5px;
       opacity: 0.3;
-    }
+    } */
     .librarySong.added {
       background-color: #f2ffcb;
     }
-    .librarySong.added::before {
+    /* .librarySong.added::before {
       content: "✔️";
       margin-left: 5px;
       opacity: 1;
-    }
+    } */
     #playlistSongs .listItem.active .songName {
-      background:#D3FF54;
+      background: #d3ff54;
     }
-    #playlistControls{
-      display:none;
+    #playlistControls {
+      display: none;
     }
 
     #preview {
