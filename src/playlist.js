@@ -145,8 +145,7 @@ function jumpToNextSong() {
 
 function updatePlaylistTitle() {
   const filePath = localStorage.getItem("listFilePath") ?? unsavedListPath();
-  listTitle = filePath.split("/").pop();
-  if (listTitle.includes(".")) listTitle = listTitle.split(".")[0];
+  listTitle = path.basename(filePath).replace(".txt", "");
   document.getElementById("playlistTitle").innerText = listTitle;
 }
 
