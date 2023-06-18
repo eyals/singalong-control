@@ -5,7 +5,6 @@ const { ipcRenderer } = require("electron");
 
 //! --------- KEYBAORD SHORTCUTS ----------
 document.addEventListener("keydown", function (event) {
-
   const searchField = document.getElementById("search");
 
   var isLetterKey = /^[A-Za-z\u0590-\u05FF]$/.test(event.key);
@@ -14,14 +13,6 @@ document.addEventListener("keydown", function (event) {
     // searchField.value = event.key;
   }
 
-  //Focus on search in library
-  if (
-    event.key === "F3" ||
-    (event.key === "f" && (event.ctrlKey || event.metaKey))
-  ) {
-    event.preventDefault();
-    searchField.focus();
-  }
 
   //Exit library search
   if (event.key === "Escape") {
@@ -66,4 +57,20 @@ document.addEventListener("keydown", function (event) {
     searchField.blur();
     clearSearch();
   }
+
+  //Toggle full screen for audience window
+  if (event.key === "F5") {
+    event.preventDefault();
+    ipcRenderer.invoke("toggle-fullscreen");
+  }
+
 });
+
+function toggleHelp() {
+  const helpElement = document.getElementById("help");
+  if (helpElement.style.display !== "block") {
+    helpElement.style.display = "block";
+  } else {
+    helpElement.style.display = "none";
+  }
+}

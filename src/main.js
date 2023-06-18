@@ -23,7 +23,7 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     x: 0,
     y: 0,
-    width: Math.min(1200, screenSize.width - 200),
+    width: Math.min(2000, screenSize.width - 200),
     height: screenSize.height,
     webPreferences: {
       nodeIntegration: true,
@@ -35,7 +35,6 @@ function createWindow() {
   if (!app.isPackaged) {
     mainWindow.webContents.openDevTools();
   }
-
 
   audienceWindow = new BrowserWindow({
     x: screenSize.width - 200,
@@ -147,6 +146,19 @@ ipcMain.handle("save-list-dialog", async (event) => {
   return result.filePath;
 });
 
+let isFullScreen = false;
+ipcMain.handle("toggle-fullscreen", (event) => {
+  console.log(isFullScreen);
+  audienceWindow.setFullScreen(!isFullScreen);
+  isFullScreen = !isFullScreen;
+  audienceWindow.on("leave-full-screen", () => {
+    mainWindow.focus();
+    isFullScreen = false;
+  });
+  // audienceWindow.setFullScreen(!audienceWindow.isFullScreen());
+});
+
+
 function setMenu() {
   const menuTemplate = [
     {
@@ -207,6 +219,18 @@ function setMenu() {
           accelerator: "CmdOrCtrl+N",
           click() {
             mainWindow.webContents.executeJavaScript(`clearList();`);
+          },
+        },
+      ],
+    },
+    {
+      label: "Help",
+      submenu: [
+        {
+          label: "Shortcuts",
+          accelerator: "F1",
+          click() {
+            mainWindow.webContents.executeJavaScript(`toggleHelp();`);
           },
         },
       ],
