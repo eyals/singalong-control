@@ -105,8 +105,6 @@ function chooseInfoSlide() {
 
 let infoSlideShown = false;
 function showInfoSlide(toShow = true) {
-  console.log(toShow);
-  console.log(localStorage.getItem("infoSlidePath"));
   if (toShow) {
     if (localStorage.getItem("infoSlidePath") == null) return;
     ipcRenderer.send(

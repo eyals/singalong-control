@@ -91,9 +91,7 @@ app.on("window-all-closed", function () {
 
 // Listen for the 'present-song' message and load the song into the iframe in the main window and audience window
 ipcMain.on("present-song", (event, songSlide) => {
-  console.log(songSlide);
-  songSlide = path.resolve(songSlide);
-  console.log(songSlide);
+  songSlide =songSlide.replace(/\\/g, "/");//fix windows paths
   mainWindow.webContents.executeJavaScript(`
   document.getElementById('songView').src = '${songSlide}';
   `);
@@ -141,24 +139,24 @@ ipcMain.handle("save-list-dialog", async (event) => {
       { name: "Text Files", extensions: ["txt"] },
       { name: "All Files", extensions: ["*"] },
     ],
-    // defaultPath: path.resolve('./playlists/'),
   });
   return result.filePath;
 });
 
 let isFullScreen = false;
 ipcMain.handle("toggle-fullscreen", (event) => {
-  console.log(isFullScreen);
   audienceWindow.setFullScreen(!isFullScreen);
   isFullScreen = !isFullScreen;
   audienceWindow.on("leave-full-screen", () => {
     mainWindow.focus();
     isFullScreen = false;
   });
-  // audienceWindow.setFullScreen(!audienceWindow.isFullScreen());
 });
 
 
+
+
+//! --------------------- Menu ---------------------
 function setMenu() {
   const menuTemplate = [
     {

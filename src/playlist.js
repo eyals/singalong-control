@@ -126,8 +126,7 @@ function showCurrentSlide() {
   if (libraryPath == null) return;
   //Random number to force iframe reload
   const rnd = Math.random();
-  const songSlide = `${libraryPath}${path.sep}${playlist[playlistIndex]}.pdf?r=${rnd}#toolbar=0&view=Fit&page=${curentSongPageIndex}`;
-  console.log(songSlide);
+  const songSlide = `${libraryPath}/${playlist[playlistIndex]}.pdf?r=${rnd}#toolbar=0&view=Fit&page=${curentSongPageIndex}`;
   ipcRenderer.send("present-song", songSlide);
   // Updating progress text
   const progressEl = document.getElementById("progress");
