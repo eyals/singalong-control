@@ -100,10 +100,11 @@
     #libraryList,
     #songView {
       flex-grow: 1;
-      overflow-y: scroll;
+      overflow-y: hidden;
     }
     #playlistSongs::-webkit-scrollbar,
     #libraryList::-webkit-scrollbar,
+    #preview::-webkit-scrollbar,
     #songView::-webkit-scrollbar {
       display: none;
     }
@@ -149,25 +150,12 @@
     }
     .listItem .songName {
       flex-grow: 1;
-      /* white-space: nowrap; */
-      /* max-lines: 1; */
-      /* text-overflow: clip;
-      overflow: hidden; */
       text-align: right;
     }
     .librarySong {
-      /* height: 25px; */
       text-align: right;
-      /* max-lines: 1; */
-      /* text-overflow: clip;
-      overflow: hidden; */
       width: 100%;
     }
-    /* .librarySong::before {
-      content: "➕";
-      margin-left: 5px;
-      opacity: 0.3;
-    } */
     .librarySong.added {
       background-color: #f2ffcb;
     }
@@ -198,6 +186,7 @@
     }
     iframe {
       border: none;
+      overflow: hidden;
     }
     #help {
       position: absolute;

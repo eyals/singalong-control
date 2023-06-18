@@ -32,9 +32,6 @@ function createWindow() {
   });
 
   mainWindow.loadFile("src/_control.html");
-  if (!app.isPackaged) {
-    mainWindow.webContents.openDevTools();
-  }
 
   audienceWindow = new BrowserWindow({
     x: screenSize.width - 200,
@@ -49,6 +46,11 @@ function createWindow() {
 
   audienceWindow.loadFile("src/_present.html");
   // audienceWindow.webContents.openDevTools();
+
+  if (!app.isPackaged) {
+    mainWindow.webContents.openDevTools();
+    audienceWindow.webContents.openDevTools();
+  }
 
   // to prevent audienceWindow from being closed directly...
   audienceWindow.on("close", function (e) {
@@ -91,7 +93,7 @@ app.on("window-all-closed", function () {
 
 // Listen for the 'present-song' message and load the song into the iframe in the main window and audience window
 ipcMain.on("present-song", (event, songSlide) => {
-  songSlide =songSlide.replace(/\\/g, "/");//fix windows paths
+  songSlide = songSlide.replace(/\\/g, "/"); //fix windows paths
   mainWindow.webContents.executeJavaScript(`
   document.getElementById('songView').src = '${songSlide}';
   `);
@@ -152,9 +154,6 @@ ipcMain.handle("toggle-fullscreen", (event) => {
     isFullScreen = false;
   });
 });
-
-
-
 
 //! --------------------- Menu ---------------------
 function setMenu() {
