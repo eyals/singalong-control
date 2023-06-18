@@ -3,34 +3,46 @@ const path = require("path");
 
 const { ipcRenderer } = require("electron");
 
+//! --------- KEYBAORD SHORTCUTS ----------
 document.addEventListener("keydown", function (event) {
-  //F3 or CTRL+F to seqarch in library
+
+  const searchField = document.getElementById("search");
+
+  var isLetterKey = /^[A-Za-z\u0590-\u05FF]$/.test(event.key);
+  if (isLetterKey && document.activeElement !== searchField) {
+    searchField.focus();
+    // searchField.value = event.key;
+  }
+
+  //Focus on search in library
   if (
     event.key === "F3" ||
     (event.key === "f" && (event.ctrlKey || event.metaKey))
   ) {
     event.preventDefault();
-    document.getElementById("search").focus();
+    searchField.focus();
   }
-  //ESC to exit library search
+
+  //Exit library search
   if (event.key === "Escape") {
     event.preventDefault();
-    document.getElementById("search").blur();
+    searchField.blur();
     clearSearch();
   }
-  //Spacebar to advance slide (unless during search)
+
+  //Advance slide (unless during search)
   if (event.key === " " || event.key === "ArrowDown") {
-    if (document.activeElement === document.getElementById("search")) return;
+    if (document.activeElement === searchField) return;
     event.preventDefault();
     playlistNext();
   }
-  //Arrow Up to move back a slide
+  //Move back a slide
   if (event.key === "ArrowUp") {
     event.preventDefault();
     playlistPrevious();
   }
 
-  // Left/Right arrows to move songs in playlist
+  // Move to next/previous song in playlist
   if (event.key === "ArrowLeft") {
     event.preventDefault();
     jumpToPreviousSong();
@@ -44,5 +56,14 @@ document.addEventListener("keydown", function (event) {
   if (event.key === "F12") {
     event.preventDefault();
     toggleInfoSlide();
+  }
+
+  //Add first search result to playlist
+  if (event.key === "Enter") {
+    if (searchField.value == "") return;
+    event.preventDefault();
+    addFirstSearchResultToPlaylistׁׂ();
+    searchField.blur();
+    clearSearch();
   }
 });

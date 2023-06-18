@@ -1,4 +1,5 @@
 let librarySongs = [];
+let searchResults = [];
 
 let libraryPath = localStorage.getItem("libraryPath");
 
@@ -29,8 +30,11 @@ function renderLibrary() {
   const libraryList = document.getElementById("libraryList");
   libraryList.innerHTML = "";
 
-  librarySongs.forEach((song) => {
-    if (query && !songNameMatchesQuery(song,query)) return;
+  searchResults = librarySongs.filter((song) =>
+    songNameMatchesQuery(song, query)
+  );
+
+  searchResults.forEach((song) => {
     const libraryItem = document.createElement("button");
     libraryItem.className = "librarySong";
     libraryItem.ariaLabel = song;
@@ -53,6 +57,10 @@ function renderLibrary() {
   }
 }
 
+function addFirstSearchResultToPlaylistׁׂ() {
+  addToList(searchResults[0]);
+}
+
 function songNameMatchesQuery(songName, query) {
   const queryParts = query.toLowerCase().split(" ");
   // Split song name into parts by any non alphanumeric character
@@ -62,7 +70,9 @@ function songNameMatchesQuery(songName, query) {
     .replace(/[^a-zA-Z0-9\u0590-\u05FF]+/g, " ")
     .split(" ");
   // Check if all query parts appear at the beginning of song parts
-  return queryParts.every((queryPart) => songParts.some((songPart) => songPart.startsWith(queryPart)));
+  return queryParts.every((queryPart) =>
+    songParts.some((songPart) => songPart.startsWith(queryPart))
+  );
 }
 
 function clearSearch() {

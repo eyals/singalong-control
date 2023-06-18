@@ -1,5 +1,12 @@
-const { app, BrowserWindow, ipcMain, screen } = require("electron");
-const { dialog, session, Menu } = require("electron");
+const {
+  app,
+  BrowserWindow,
+  ipcMain,
+  screen,
+  dialog,
+  session,
+  Menu,
+} = require("electron");
 const path = require("path");
 
 // Enable live reload for all the files inside your project directory
@@ -25,7 +32,10 @@ function createWindow() {
   });
 
   mainWindow.loadFile("src/_control.html");
-  mainWindow.webContents.openDevTools();
+  if (!app.isPackaged) {
+    mainWindow.webContents.openDevTools();
+  }
+
 
   audienceWindow = new BrowserWindow({
     x: screenSize.width - 200,
@@ -52,6 +62,7 @@ function createWindow() {
   mainWindow.on("closed", function () {
     app.isQuiting = true;
     if (audienceWindow) audienceWindow.close();
+    app.quit();
   });
 }
 
