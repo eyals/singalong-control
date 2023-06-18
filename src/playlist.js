@@ -73,9 +73,9 @@ function updatePlaylist() {
 
 // Present a song in the list
 async function presentSong(song, skipToLastSlide = false) {
+  const playlistEl = document.getElementById("playlistSongs");
   playlistIndex = playlist.indexOf(song);
-  const playlistSongEl =
-    document.getElementById("playlistSongs").children[playlistIndex];
+  const playlistSongEl = playlistEl.children[playlistIndex];
   if (playlistSongEl.ariaDisabled) {
     presentSong(playlist[playlistIndex + 1]);
     return;
@@ -87,6 +87,8 @@ async function presentSong(song, skipToLastSlide = false) {
     playlistSongs[i].classList.remove("active");
   }
   playlistSongEl.classList.add("active");
+
+  playlistSongEl.scrollIntoView({ behavior: "smooth", block: "start" });
 
   // Getting the number of slides in the song
   const songPath = `${libraryPath}/${song}.pdf`;
