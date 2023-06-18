@@ -33,8 +33,7 @@
     <section id="preview">
       <iframe id="songView" border="none"></iframe>
       <section id="toolbar">
-        <button onclick="playlistNext()">Next</button>
-        <section id="progress">sss</section>
+        <section id="progress">.</section>
       </section>
     </section>
   </body>
@@ -175,7 +174,12 @@
     #preview #toolbar {
       display: flex;
       flex-direction: row;
-      justify-content: space-between;
+    }
+    #progress{
+      background: white;
+      color: black;
+      width:0;
+      font-size:11px;
     }
     iframe {
       border: none;

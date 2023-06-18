@@ -93,6 +93,8 @@ app.on("window-all-closed", function () {
 // Listen for the 'present-song' message and load the song into the iframe in the main window and audience window
 ipcMain.on("present-song", (event, songSlide) => {
   console.log(songSlide);
+  songSlide = path.resolve(songSlide);
+  console.log(songSlide);
   mainWindow.webContents.executeJavaScript(`
   document.getElementById('songView').src = '${songSlide}';
   `);

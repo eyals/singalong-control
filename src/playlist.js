@@ -91,7 +91,7 @@ async function presentSong(song, skipToLastSlide = false) {
   playlistSongEl.scrollIntoView({ behavior: "smooth", block: "start" });
 
   // Getting the number of slides in the song
-  const songPath = `${libraryPath}/${song}.pdf`;
+  const songPath = `${libraryPath}${path.sep}${song}.pdf`;
   const pdfBytes = fs.readFileSync(songPath);
   const pdfDoc = await PDFDocument.load(pdfBytes);
   curentSongPageCount = pdfDoc.getPageCount();
@@ -126,12 +126,13 @@ function showCurrentSlide() {
   if (libraryPath == null) return;
   //Random number to force iframe reload
   const rnd = Math.random();
-  const songSlide = `${libraryPath}/${playlist[playlistIndex]}.pdf?r=${rnd}#toolbar=0&view=Fit&page=${curentSongPageIndex}`;
+  const songSlide = `${libraryPath}${path.sep}${playlist[playlistIndex]}.pdf?r=${rnd}#toolbar=0&view=Fit&page=${curentSongPageIndex}`;
+  console.log(songSlide);
   ipcRenderer.send("present-song", songSlide);
   // Updating progress text
-  document.getElementById(
-    "progress"
-  ).innerText = `${curentSongPageIndex} מתוך ${curentSongPageCount}`;
+  const progressEl = document.getElementById("progress");
+  progressEl.innerText = `${curentSongPageIndex} מתוך ${curentSongPageCount}`;
+  progressEl.style.width = `${Math.floor(curentSongPageIndex / curentSongPageCount * 100)}%`;
 }
 
 function jumpToPreviousSong() {
@@ -152,7 +153,7 @@ function updatePlaylistTitle() {
 //! --------- OPEN / SAVE / NEW ----------
 
 function unsavedListPath() {
-  return path.resolve(`./data/${newPlaylistTitle}.txt`);
+  return path.resolve(`data${path.sep}${newPlaylistTitle}.txt`);
 }
 
 // Load the active playlist from the last session, or the default list if none exists
@@ -161,7 +162,9 @@ function loadActivePlaylist() {
   fs.readFile(filePath, "utf8", (err, data) => {
     if (err) {
       console.log("Failed to read playlist file");
-      clearList();
+      fs.writeFile(filePath,'');
+      loadActivePlaylist();
+      // clearList();
     } else {
       playlist = data.trim().split("\n");
     }
