@@ -23,7 +23,7 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     x: 0,
     y: 0,
-    width: Math.min(2000, screenSize.width - 200),
+    width: screenSize.width,
     height: screenSize.height,
     webPreferences: {
       nodeIntegration: true,
@@ -32,12 +32,22 @@ function createWindow() {
   });
 
   mainWindow.loadFile("src/_control.html");
+  const menu = Menu.buildFromTemplate(getMenuTemplate());
+  mainWindow.setMenu(menu);
+  mainWindow.setTitle("שירבוץ");
+
+
+  let displays = screen.getAllDisplays();
+  let externalDisplay = displays.find((display) => {
+    return display.bounds.x !== 0 || display.bounds.y !== 0;
+  });
+
 
   audienceWindow = new BrowserWindow({
     x: screenSize.width - 200,
     y: 0,
-    width: 200,
-    height: 150,
+    width: 400,
+    height: 300,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
@@ -45,7 +55,19 @@ function createWindow() {
   });
 
   audienceWindow.loadFile("src/_present.html");
-  // audienceWindow.webContents.openDevTools();
+  audienceWindow.setAlwaysOnTop(true, "floating");
+  audienceWindow.setMenu(null);
+
+    if (externalDisplay) {
+      audienceWindow.setBounds({
+        x: externalDisplay.bounds.x + 50,
+        y: externalDisplay.bounds.y + 50,
+      });
+      audienceWindow.setSimpleFullScreen(true);
+    }
+
+  mainWindow.focus();
+
 
   if (!app.isPackaged) {
     mainWindow.webContents.openDevTools();
@@ -76,8 +98,6 @@ app.whenReady().then(() => {
     details.requestHeaders["Expires"] = "0";
     callback({ cancel: false, requestHeaders: details.requestHeaders });
   });
-
-  setMenu();
 
   screenSize = screen.getPrimaryDisplay().size;
   createWindow();
@@ -147,17 +167,16 @@ ipcMain.handle("save-list-dialog", async (event) => {
 
 let isFullScreen = false;
 ipcMain.handle("toggle-fullscreen", (event) => {
-  audienceWindow.setFullScreen(!isFullScreen);
+  audienceWindow.setSimpleFullScreen(!isFullScreen);
   isFullScreen = !isFullScreen;
   audienceWindow.on("leave-full-screen", () => {
     mainWindow.focus();
-    isFullScreen = false;
   });
 });
 
 //! --------------------- Menu ---------------------
-function setMenu() {
-  const menuTemplate = [
+function getMenuTemplate() {
+  return [
     {
       label: "File",
       submenu: [
@@ -233,7 +252,4 @@ function setMenu() {
       ],
     },
   ];
-
-  const menu = Menu.buildFromTemplate(menuTemplate);
-  Menu.setApplicationMenu(menu);
 }
