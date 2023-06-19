@@ -5,6 +5,7 @@
     <script src="common.js"></script>
     <script src="library.js"></script>
     <script src="playlist.js"></script>
+    <script src="slidenav.js"></script>
   </head>
   <body>
     <section id="library">
@@ -15,7 +16,7 @@
           placeholder="חיפוש"
           oninput="renderLibrary()"
         />
-        <button onclick="clearSearch()">⊗</button>
+        <!-- <button onclick="clearSearch()">⊗</button> -->
       </section>
       <section id="libraryList"></section>
     </section>
@@ -31,10 +32,10 @@
     </section>
 
     <section id="preview">
-      <iframe id="songView" border="none"></iframe>
       <section id="toolbar">
-        <section id="progress">.</section>
+        <section id="progress"></section>
       </section>
+      <iframe id="songView" border="none"></iframe>
     </section>
 
     <section id="help">
@@ -78,8 +79,8 @@
     button {
       cursor: pointer;
       background-color: #eee;
-      border: 1px solid black;
-      border-radius: 3px;
+      border:none;
+      border-bottom: 1px solid black;
       font-size: 16px;
       min-height: 25px;
       overflow: hidden;
@@ -100,7 +101,7 @@
     #libraryList,
     #songView {
       flex-grow: 1;
-      overflow-y: hidden;
+      overflow-y: scroll;
     }
     #playlistSongs::-webkit-scrollbar,
     #libraryList::-webkit-scrollbar,
@@ -117,15 +118,16 @@
       flex-direction: row;
       height: 35px;
       margin-bottom: 3px;
-      position: relative;
+      /* position: relative; */
     }
     #searchBar input {
       flex-grow: 1;
       font-size: 18px;
       border: none;
       border-radius: 3px;
+      width: 100%;
     }
-    #searchBar button {
+    /* #searchBar button {
       display: none;
       position: absolute;
       left: 3px;
@@ -136,13 +138,13 @@
       line-height: 100%;
       background: none;
       border: none;
-    }
+    } */
     #searchBar.active input {
       background-color: #d3ff54;
     }
-    #searchBar.active button {
+    /* #searchBar.active button {
       display: inline-block;
-    }
+    } */
     .listItem {
       display: flex;
       flex-direction: row;
@@ -151,6 +153,13 @@
     .listItem .songName {
       flex-grow: 1;
       text-align: right;
+    }
+    .listItem .remove{
+      font-size: 10px;
+      width:20px;
+      padding:0;
+      flex-grow: 0;
+      flex-shrink: 0;
     }
     .librarySong {
       text-align: right;
@@ -163,6 +172,10 @@
       content: "✔️";
       margin-left: 2px;
       font-size: 8px;
+    }
+    #playlistTitle{
+      direction: ltr;
+      text-align: center;
     }
     #playlistSongs .listItem.active .songName {
       background: #d3ff54;
@@ -179,10 +192,11 @@
       flex-direction: row;
     }
     #progress {
-      background: white;
+      background: #d3ff54;
       color: black;
       width: 0;
-      font-size: 11px;
+      font-size: 5px;
+      height:3px;
     }
     iframe {
       border: none;

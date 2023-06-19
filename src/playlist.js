@@ -124,13 +124,14 @@ function playlistPrevious() {
 //TODO Consider https://pspdfkit.com/blog/2021/how-to-build-an-electron-pdf-viewer-with-pdfjs/
 function showCurrentSlide() {
   if (libraryPath == null) return;
-  //Random number to force iframe reload
-  const rnd = Math.random();
-  const songSlide = `${libraryPath}/${playlist[playlistIndex]}.pdf?r=${rnd}#toolbar=0&view=Fit&page=${curentSongPageIndex}`;
-  ipcRenderer.send("present-song", songSlide);
+  ipcRenderer.send("present-song", {
+    songPath: `${libraryPath}/${playlist[playlistIndex]}.pdf`,
+    songPage: curentSongPageIndex,
+    totalSlides: curentSongPageCount,
+  });
   // Updating progress text
   const progressEl = document.getElementById("progress");
-  progressEl.innerText = `${curentSongPageIndex} מתוך ${curentSongPageCount}`;
+  // progressEl.innerText = `${curentSongPageIndex} מתוך ${curentSongPageCount}`;
   progressEl.style.width = `${Math.floor(curentSongPageIndex / curentSongPageCount * 100)}%`;
 }
 

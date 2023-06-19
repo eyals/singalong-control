@@ -108,8 +108,11 @@ function showInfoSlide(toShow = true) {
   if (toShow) {
     if (localStorage.getItem("infoSlidePath") == null) return;
     ipcRenderer.send(
-      "present-song",
-      `${localStorage.getItem("infoSlidePath")}#toolbar=0&view=Fit`
+      "present-song", {
+        songPath: localStorage.getItem("infoSlidePath"),
+        slideNumber: 1,
+        totalSlides: 1,
+      }
     );
     infoSlideShown = true;
   } else {

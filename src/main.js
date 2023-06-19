@@ -92,13 +92,13 @@ app.on("window-all-closed", function () {
 });
 
 // Listen for the 'present-song' message and load the song into the iframe in the main window and audience window
-ipcMain.on("present-song", (event, songSlide) => {
-  songSlide = songSlide.replace(/\\/g, "/"); //fix windows paths
+ipcMain.on("present-song", (event, options) => {
+  songPath = options.songPath.replace(/\\/g, "/"); //fix windows paths
   mainWindow.webContents.executeJavaScript(`
-  document.getElementById('songView').src = '${songSlide}';
-  `);
+  presentSlide('${songPath}', ${options.songPage}, ${options.totalSlides});
+   `);
   audienceWindow.webContents.executeJavaScript(`
-  document.getElementById('songView').src = '${songSlide}';
+  presentSlide('${songPath}', ${options.songPage}, ${options.totalSlides});
    `);
 });
 
