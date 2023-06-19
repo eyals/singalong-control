@@ -79,7 +79,7 @@
     button {
       cursor: pointer;
       background-color: #eee;
-      border:none;
+      border: none;
       border-bottom: 1px solid black;
       font-size: 16px;
       min-height: 25px;
@@ -154,10 +154,10 @@
       flex-grow: 1;
       text-align: right;
     }
-    .listItem .remove{
+    .listItem .remove {
       font-size: 10px;
-      width:20px;
-      padding:0;
+      width: 20px;
+      padding: 0;
       flex-grow: 0;
       flex-shrink: 0;
     }
@@ -173,7 +173,7 @@
       margin-left: 2px;
       font-size: 8px;
     }
-    #playlistTitle{
+    #playlistTitle {
       direction: ltr;
       text-align: center;
     }
@@ -196,11 +196,13 @@
       color: black;
       width: 0;
       font-size: 5px;
-      height:3px;
+      height: 3px;
     }
-    iframe {
+    #songView {
       border: none;
       overflow: hidden;
+      opacity: 1;
+      transition: opacity 0.2s;
     }
     #help {
       position: absolute;

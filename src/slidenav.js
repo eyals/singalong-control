@@ -12,7 +12,20 @@ function presentSlide(songPath, slideNumber, totalSlides) {
     console.log("new song, load " + songPath);
     // songView.src = `${songPath}#toolbar=0&view=Fit`;
   }
-	const rnd = Math.random();
-	console.log(`${songPath}?r=${rnd}#toolbar=0&view=Fit&page=${slideNumber}`);
-  songView.src = `${songPath}?r=${rnd}#toolbar=0&view=Fit&page=${slideNumber}`;
+  const rnd = Math.random();
+  const newUrl = `${songPath}?r=${rnd}#toolbar=0&view=Fit&page=${slideNumber}`;
+
+  songView.style.opacity = 0;
+  setTimeout(function () {
+    songView.src = newUrl;
+
+    // Wait for iframe to load the new content
+    songView.onload = function () {
+      setTimeout(function () {
+
+      // Now fade the iframe back in
+        songView.style.opacity = 1;
+      }, 400);
+    };
+  }, 200);
 }
